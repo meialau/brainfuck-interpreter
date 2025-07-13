@@ -1,50 +1,108 @@
-# Simple Brainfuck Interpreter in C
-This repository contains a simple Brainfuck interpreter written in C.
-The interpreter reads Brainfuck code from a file, parses it, and executes the commands in a memory buffer.
+Here’s a `README.md` in Markdown format, written in code block syntax, that mirrors the style of your Brainfuck interpreter README — but for your ultra-lightweight Java web server project:
+
+````markdown
+# Ultra-Lightweight Java WebServer
+
+This repository contains an extremely lightweight Java HTTPS web server built with minimal dependencies. It is designed to serve static files, handle basic API endpoints, and parse JSON requests.
 
 ## Features
-- Supports all standard Brainfuck commands (`>`, `<`, `+`, `-`, `.`, `,`, `[`, `]`).
-- Handles loops using `[` and `]` efficiently.
-- Uses a fixed-size memory buffer of 30000 cells.
 
-## How does brainfuck work?
-If you're here, you probably already know that, but here you go:
-The interpreter reads a file, then processes each character based on a instruction set:
+- Native HTTPS support using `.p12` certificates.
+- Static file hosting with custom routing.
+- Lightweight JSON parsing using `Gson`.
+- POST/GET routing with simple lambda mappings.
+- Minimal dependencies for fast startup and low resource usage.
+- No frameworks like Spring — just plain Java and a few utility classes.
 
-- `>`: Move the memory pointer to the right.
-- `<`: Move the memory pointer to the left.
-- `+`: Increment the value at the current memory cell.
-- `-`: Decrement the value at the current memory cell.
-- `.`: Output the character at the current memory cell.
-- `,`: Read a character and store it at the current memory cell.
-- `[`: Jump to the corresponding `]` if the current memory cell value is `0`.
-- `]`: Jump back to the corresponding `[` if the current memory cell value is non-zero.
+## How it Works
 
-### Compilation
-To compile the program, use a C compiler like `gcc`:
+The server initializes on port `443` using an HTTPS certificate, and supports the following routes:
+
+### Static File Hosting
+
+```java
+webServer.prepareStaticFiles("/", "/home/page/");
+````
+
+This serves static files (like `index.html`, CSS, JS) from the `/home/page/` directory.
+
+### GET Mapping Example
+
+```java
+webServer.getMapping("/", (request, response) -> {
+    response.writeFile("/home/page/index.html");
+});
+```
+
+### POST API Endpoints
+
+* `/results`: Returns previously cached results by key.
+* `/submit`: Accepts a base64 image and returns a unique key for results.
+* `/captcha`: Verifies a Turnstile CAPTCHA and caches valid tokens.
+
+## Dependencies
+
+Only the following are used:
+
+* [`Gson`](https://github.com/google/gson): For parsing JSON.
+* [`Apache Commons Lang`](https://commons.apache.org/proper/commons-lang/): For generating secure random strings.
+
+No heavyweight web libraries are included.
+
+## Compilation
+
+Use `javac` to compile:
 
 ```bash
-gcc fuck.c -o interpreter
+javac -cp ".:gson-2.10.1.jar:commons-lang3-3.12.0.jar" -d out src/**/*.java
 ```
 
-### Running the Program
-To run the interpreter, provide a brainfuck file as an argument:
+Ensure you replace the version numbers with the ones you use, and the paths accordingly.
+
+## Running
+
+Use the compiled output with the classpath and your certificate:
 
 ```bash
-./interpreter example.bf
+java -cp ".:out:gson-2.10.1.jar:commons-lang3-3.12.0.jar" me.meiallu.sayori.Main
 ```
 
-Where `example.bf` is a file containing brainfuck code.
-There is a Hello World program in the repository as example.
+## Example HTTPS Certificate
 
-```brainfuck
-++++++++++[>++++++++>+++++++++++>++++++++++>++++>+++>++++++++>++++++++++++>+++++++++++>++++++++++>+++++++++++>+++>+<<<<<<<<<<<<-]>-.>--.>---.>++++.>++.>---.>---.>.>.>+.>+++.>.
+Use a `.p12` certificate, and pass it to the server like:
+
+```java
+new WebServer(443, "/home/certificate.p12", "your_password");
 ```
 
-## Memory
-The interpreter uses a static memory array of 30000 bytes.
-The memory pointer starts at the beginning of the array and can move left or right during execution.
+## File Upload + Processing
+
+The `/submit` route allows uploading an image as a base64 string, saves it to disk, and processes it with a `ResultList`.
+
+```json
+{
+  "image": "data:image/png;base64,...",
+  "token": "captcha-token"
+}
+```
+
+A unique result key is returned and used later via `/results`.
 
 ## Limitations
-- Memory is fixed at 30000 cells.
-- No input validation for brainfuck programs, so ensure valid syntax in your `.bf` files.
+
+* No concurrent request handling — keep usage light.
+* No session management or auth system.
+* Must manage `.p12` certificates manually.
+
+## Why?
+
+This server was built for environments where minimalism, speed, and control matter more than scalability or full-stack features.
+
+## License
+
+MIT — do whatever you want with it.
+
+```
+
+Let me know if you'd like the README to include API response examples, certificate generation steps, or Docker support.
+```
