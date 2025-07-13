@@ -48,5 +48,3 @@ The memory pointer starts at the beginning of the array and can move left or rig
 ## Limitations
 - Memory is fixed at 30000 cells.
 - No input validation for brainfuck programs, so ensure valid syntax in your `.bf` files.
-
-Have fun <3
