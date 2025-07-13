@@ -7,7 +7,7 @@ The interpreter reads Brainfuck code from a file, parses it, and executes the co
 - Handles loops using `[` and `]` efficiently.
 - Uses a fixed-size memory buffer of 30000 cells.
 
-## How does brainfuck works?
+## How does brainfuck work?
 If you're here, you probably already know that, but here you go:
 The interpreter reads a file, then processes each character based on a instruction set:
 
